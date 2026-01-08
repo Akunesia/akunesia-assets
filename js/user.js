@@ -135,5 +135,75 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 // --- Akhir JavaScript untuk Inform Consent ---
+// Function to copy text from input field
+function copyFromInput(button) {
+    const input = button.previousElementSibling;
+    let textToCopy = '';
 
+    if (input && (input.tagName === 'INPUT' || input.tagName === 'TEXTAREA')) {
+        textToCopy = input.value;
+    } else {
+        textToCopy = input?.innerText || '';
+    }
+
+    if (!textToCopy) return;
+
+    // Gunakan Clipboard API yang modern
+    navigator.clipboard.writeText(textToCopy).then(() => {
+        // Visual feedback
+        button.classList.add('copied');
+        const originalIcon = button.innerHTML;
+        button.innerHTML = '<i class="fe fe-check"></i>';
+
+        setTimeout(() => {
+            button.innerHTML = originalIcon;
+            button.classList.remove('copied');
+        }, 1500);
+    }).catch(err => {
+        console.error('Gagal menyalin teks:', err);
+        alert('❌ Gagal menyalin teks. Coba salin manual ya kak.');
+    });
+}
+// Initialize tooltips when modal is shown
+document.addEventListener('DOMContentLoaded', function() {
+    const accountModals = document.querySelectorAll('.bottomsheet');
+    
+    accountModals.forEach(modal => {
+        modal.addEventListener('shown.bs.modal', function () {
+            const tooltips = modal.querySelectorAll('[data-bs-toggle="tooltip"]');
+            tooltips.forEach(el => {
+                new bootstrap.Tooltip(el);
+            });
+        });
+        
+        // Add swipe down to close functionality
+        if (typeof Hammer !== 'undefined') {
+            const hammertime = new Hammer(modal);
+            hammertime.get('swipe').set({ direction: Hammer.DIRECTION_DOWN });
+            
+            hammertime.on('swipedown', function() {
+                const modalInstance = bootstrap.Modal.getInstance(modal);
+                if (modalInstance) modalInstance.hide();
+            });
+        }
+        
+        // Handle drag from drag handle
+        const dragHandle = modal.querySelector('.modal-drag-handle');
+        if (dragHandle) {
+            dragHandle.addEventListener('touchstart', function(e) {
+                this.setAttribute('data-touch-start-y', e.touches[0].clientY);
+            });
+            
+            dragHandle.addEventListener('touchmove', function(e) {
+                const startY = parseInt(this.getAttribute('data-touch-start-y')) || 0;
+                const currentY = e.touches[0].clientY;
+                
+                if (currentY - startY > 50) {
+                    const modalInstance = bootstrap.Modal.getInstance(modal);
+                    if (modalInstance) modalInstance.hide();
+                }
+            });
+        }
+    });
+});
 
