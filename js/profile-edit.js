@@ -1,5 +1,16 @@
+/**
+ * Profile Edit JavaScript
+ * Handles profile settings, password change, photo upload, and activity timeline
+ * 
+ * @author Akunesia
+ * @version 1.0.0
+ */
+
 document.addEventListener("DOMContentLoaded", function() {
-  // Auto-hide alerts after 5 seconds
+  
+  // =====================================================
+  // AUTO-HIDE ALERTS
+  // =====================================================
   const alerts = document.querySelectorAll('.alert');
   if (alerts.length > 0) {
     alerts.forEach(alert => {
@@ -10,7 +21,9 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   }
   
-  // Password visibility toggle
+  // =====================================================
+  // PASSWORD VISIBILITY TOGGLE
+  // =====================================================
   document.querySelectorAll('.toggle-password').forEach(button => {
     button.addEventListener('click', function() {
       const targetId = this.getAttribute('data-target');
@@ -26,220 +39,193 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   });
   
-  // Perbaikan untuk preview foto
-const avatarUpload = document.getElementById('avatar-upload');
-const photoForm = document.getElementById('photo-form');
+  // =====================================================
+  // PHOTO UPLOAD & PREVIEW
+  // =====================================================
+  const avatarUpload = document.getElementById('avatar-upload');
+  const photoForm = document.getElementById('photo-form');
 
-if (avatarUpload && photoForm) {
-  avatarUpload.addEventListener('change', function() {
-    if (this.files.length > 0) {
-      // Validasi ukuran file (maks 2MB)
-      if (this.files[0].size > 2 * 1024 * 1024) {
-        alert('File size cannot exceed 2MB. Please select a smaller image.');
-        this.value = ''; // Reset input
-        return;
-      }
-      
-      // Dapatkan file yang dipilih
-      const file = this.files[0];
-      
-      // Buat objek URL untuk file lokal
-      const objectUrl = URL.createObjectURL(file);
-      
-      // Tampilkan preview menggunakan objectURL
-      const avatarContainer = document.querySelector('.user-avatar');
-      const existingImg = avatarContainer.querySelector('img');
-      const placeholder = avatarContainer.querySelector('.avatar-placeholder');
-      
-      // Jika sudah ada gambar, update src nya
-      if (existingImg) {
-        existingImg.src = objectUrl;
-        existingImg.style.display = 'block';
-      } else if (placeholder) {
-        // Jika belum ada gambar tapi ada placeholder, sembunyikan placeholder dan buat gambar baru
-        placeholder.style.display = 'none';
+  if (avatarUpload && photoForm) {
+    avatarUpload.addEventListener('change', function() {
+      if (this.files.length > 0) {
+        // Validasi ukuran file (maks 2MB)
+        if (this.files[0].size > 2 * 1024 * 1024) {
+          alert('File size cannot exceed 2MB. Please select a smaller image.');
+          this.value = ''; // Reset input
+          return;
+        }
         
-        const newImg = document.createElement('img');
-        newImg.id = 'user-photo';
-        newImg.alt = 'User Profile';
-        newImg.src = objectUrl;
+        // Dapatkan file yang dipilih
+        const file = this.files[0];
         
-        // Tambahkan class yang sama seperti yang digunakan pada gambar profil
-        newImg.className = 'profile-image';
+        // Buat objek URL untuk file lokal
+        const objectUrl = URL.createObjectURL(file);
         
-        // Sisipkan gambar baru sebelum placeholder
-        avatarContainer.insertBefore(newImg, placeholder);
-      }
-      
-      // Tampilkan indikator loading
-      const avatarEdit = document.querySelector('.avatar-edit-btn');
-      if (avatarEdit) {
-        avatarEdit.innerHTML = '<i class="fe fe-upload"></i>';
-        avatarEdit.style.backgroundColor = '#FFA500'; // Warna oranye untuk menunjukkan sedang dalam proses
-      }
-      
-      // Tambahkan label status pada container
-      const statusLabel = document.createElement('div');
-      statusLabel.className = 'upload-status';
-      statusLabel.innerHTML = 'Save To Change';
-      statusLabel.style.position = 'absolute';
-      statusLabel.style.bottom = '110px';
-      statusLabel.style.left = '0';
-      statusLabel.style.right = '0';
-      statusLabel.style.textAlign = 'center';
-      statusLabel.style.fontSize = '12px';
-      statusLabel.style.color = '#FFA500';
-      statusLabel.style.fontWeight = 'bold';
-      
-      // Tambahkan label jika belum ada
-      //if (!avatarContainer.querySelector('.upload-status')) {
-        //avatarContainer.appendChild(statusLabel);
-      //}
-      
-      // Tampilkan tombol Save jika belum ada
-      let saveButton = document.getElementById('save-photo-button');
-      
-      if (!saveButton) {
-        saveButton = document.createElement('button');
-        saveButton.id = 'save-photo-button';
-        saveButton.type = 'button';
-        saveButton.className = 'btn btn-primary btn-sm mt-2';
-        saveButton.innerHTML = '<i class="fe fe-save"></i> Save Photo';
-        saveButton.style.display = 'block';
-        saveButton.style.margin = '10px auto 0';
+        // Tampilkan preview menggunakan objectURL
+        const avatarContainer = document.querySelector('.user-avatar');
+        const existingImg = avatarContainer.querySelector('img');
+        const placeholder = avatarContainer.querySelector('.avatar-placeholder');
         
-        // Tambahkan tombol setelah avatar container
-        avatarContainer.parentNode.insertBefore(saveButton, avatarContainer.nextSibling);
-        
-        // Event listener untuk tombol save
-        saveButton.addEventListener('click', function() {
-          // Ubah status tombol saat proses upload
-          this.disabled = true;
-          this.innerHTML = '<i class="fe fe-loader"></i> Saving...';
+        // Jika sudah ada gambar, update src nya
+        if (existingImg) {
+          existingImg.src = objectUrl;
+          existingImg.style.display = 'block';
+        } else if (placeholder) {
+          // Jika belum ada gambar tapi ada placeholder, sembunyikan placeholder dan buat gambar baru
+          placeholder.style.display = 'none';
           
-          // Submit form dengan AJAX
-          if (window.FormData) {
-            const formData = new FormData(photoForm);
+          const newImg = document.createElement('img');
+          newImg.id = 'user-photo';
+          newImg.alt = 'User Profile';
+          newImg.src = objectUrl;
+          
+          // Tambahkan class yang sama seperti yang digunakan pada gambar profil
+          newImg.className = 'profile-image';
+          
+          // Sisipkan gambar baru sebelum placeholder
+          avatarContainer.insertBefore(newImg, placeholder);
+        }
+        
+        // Tampilkan indikator loading
+        const avatarEdit = document.querySelector('.avatar-edit-btn');
+        if (avatarEdit) {
+          avatarEdit.innerHTML = '<i class="fe fe-upload"></i>';
+          avatarEdit.style.backgroundColor = '#FFA500'; // Warna oranye untuk menunjukkan sedang dalam proses
+        }
+        
+        // Tampilkan tombol Save jika belum ada
+        let saveButton = document.getElementById('save-photo-button');
+        
+        if (!saveButton) {
+          saveButton = document.createElement('button');
+          saveButton.id = 'save-photo-button';
+          saveButton.type = 'button';
+          saveButton.className = 'btn btn-primary btn-sm mt-2';
+          saveButton.innerHTML = '<i class="fe fe-save"></i> Save Photo';
+          saveButton.style.display = 'block';
+          saveButton.style.margin = '10px auto 0';
+          
+          // Tambahkan tombol setelah avatar container
+          avatarContainer.parentNode.insertBefore(saveButton, avatarContainer.nextSibling);
+          
+          // Event listener untuk tombol save
+          saveButton.addEventListener('click', function() {
+            // Ubah status tombol saat proses upload
+            this.disabled = true;
+            this.innerHTML = '<i class="fe fe-loader"></i> Saving...';
             
-            fetch(window.location.href, {
-              method: 'POST',
-              body: formData
-            })
-            .then(response => response.text())
-            .then(html => {
-              // Tampilkan pesan sukses
-              statusLabel.innerHTML = 'Photo saved successfully!';
-              statusLabel.style.color = '#28a745';
+            // Submit form dengan AJAX
+            if (window.FormData) {
+              const formData = new FormData(photoForm);
               
-              // Kembalikan ikon kamera
-              if (avatarEdit) {
-                avatarEdit.innerHTML = '<i class="fe fe-camera"></i>';
-                avatarEdit.style.backgroundColor = '';
-              }
-              
-              // Sembunyikan tombol save setelah berhasil
-              saveButton.style.display = 'none';
-              
-              // Tampilkan notifikasi sukses
-              const alertContainer = document.createElement('div');
-              alertContainer.className = 'alert alert-success alert-dismissible fade show';
-              alertContainer.setAttribute('role', 'alert');
-              alertContainer.innerHTML = `
-                <i class="fe fe-check-circle me-2"></i> User Photo is updated successfully.
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-              `;
-              
-              // Tambahkan ke halaman
-              const container = document.querySelector('.content.container-fluid');
-              if (container) {
-                container.insertBefore(alertContainer, container.firstChild.nextSibling);
-                
-                // Auto-hide setelah 5 detik
-                setTimeout(() => {
-                  const bsAlert = new bootstrap.Alert(alertContainer);
-                  bsAlert.close();
-                }, 5000);
-              }
-              
-              // Hilangkan label status setelah beberapa detik
-              setTimeout(() => {
-                if (statusLabel.parentNode) {
-                  statusLabel.parentNode.removeChild(statusLabel);
+              fetch(window.location.href, {
+                method: 'POST',
+                body: formData
+              })
+              .then(response => response.text())
+              .then(html => {
+                // Kembalikan ikon kamera
+                if (avatarEdit) {
+                  avatarEdit.innerHTML = '<i class="fe fe-camera"></i>';
+                  avatarEdit.style.backgroundColor = '';
                 }
-              }, 3000);
-            })
-            .catch(error => {
-              console.error('Error uploading image:', error);
-              
-              // Reset tombol
-              saveButton.disabled = false;
-              saveButton.innerHTML = '<i class="fe fe-save"></i> Save Photo';
-              
-              // Update status
-              statusLabel.innerHTML = 'Failed to save photo!';
-              statusLabel.style.color = '#dc3545';
-              
-              // Kembalikan ikon kamera
-              if (avatarEdit) {
-                avatarEdit.innerHTML = '<i class="fe fe-camera"></i>';
-                avatarEdit.style.backgroundColor = '';
-              }
-            });
-          } else {
-            // Fallback jika FormData tidak didukung
-            photoForm.submit();
-          }
+                
+                // Sembunyikan tombol save setelah berhasil
+                saveButton.style.display = 'none';
+                
+                // Tampilkan notifikasi sukses
+                const alertContainer = document.createElement('div');
+                alertContainer.className = 'alert alert-success alert-dismissible fade show';
+                alertContainer.setAttribute('role', 'alert');
+                alertContainer.innerHTML = `
+                  <i class="fe fe-check-circle me-2"></i> User Photo is updated successfully.
+                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                `;
+                
+                // Tambahkan ke halaman
+                const container = document.querySelector('.content.container-fluid');
+                if (container) {
+                  container.insertBefore(alertContainer, container.firstChild.nextSibling);
+                  
+                  // Auto-hide setelah 5 detik
+                  setTimeout(() => {
+                    const bsAlert = new bootstrap.Alert(alertContainer);
+                    bsAlert.close();
+                  }, 5000);
+                }
+              })
+              .catch(error => {
+                console.error('Error uploading image:', error);
+                
+                // Reset tombol
+                saveButton.disabled = false;
+                saveButton.innerHTML = '<i class="fe fe-save"></i> Save Photo';
+                
+                // Kembalikan ikon kamera
+                if (avatarEdit) {
+                  avatarEdit.innerHTML = '<i class="fe fe-camera"></i>';
+                  avatarEdit.style.backgroundColor = '';
+                }
+                
+                // Tampilkan error alert
+                alert('Failed to save photo. Please try again.');
+              });
+            } else {
+              // Fallback jika FormData tidak didukung
+              photoForm.submit();
+            }
+          });
+        } else {
+          // Jika tombol save sudah ada, pastikan terlihat
+          saveButton.style.display = 'block';
+          saveButton.disabled = false;
+          saveButton.innerHTML = '<i class="fe fe-save"></i> Save Photo';
+        }
+        
+        // Tambahkan fungsi untuk membersihkan objURL saat tidak diperlukan lagi
+        // untuk mencegah memory leak
+        window.addEventListener('beforeunload', function() {
+          URL.revokeObjectURL(objectUrl);
         });
-      } else {
-        // Jika tombol save sudah ada, pastikan terlihat
-        saveButton.style.display = 'block';
-        saveButton.disabled = false;
-        saveButton.innerHTML = '<i class="fe fe-save"></i> Save Photo';
       }
-      
-      // Tambahkan fungsi untuk membersihkan objURL saat tidak diperlukan lagi
-      // untuk mencegah memory leak
-      window.addEventListener('beforeunload', function() {
-        URL.revokeObjectURL(objectUrl);
-      });
+    });
+  }
+
+  // Tambahkan CSS untuk memperbaiki tampilan gambar preview
+  const style = document.createElement('style');
+  style.textContent = `
+    .user-avatar {
+      position: relative;
+      width: 120px;
+      height: 120px;
+      margin: 0 auto 25px;
     }
-  });
-}
-
-// Tambahkan CSS untuk memperbaiki tampilan gambar preview
-const style = document.createElement('style');
-style.textContent = `
-  .user-avatar {
-    position: relative;
-    width: 120px;
-    height: 120px;
-    margin: 0 auto 25px; /* Tambahkan margin bottom lebih untuk label status */
-  }
+    
+    .user-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 4px solid #fff;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Tambahkan animasi loading untuk ikon upload */
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+    
+    .fe-upload, .fe-loader {
+      animation: pulse 1.5s infinite;
+    }
+  `;
+  document.head.appendChild(style);
   
-  .user-avatar img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 50%;
-    border: 4px solid #fff;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-  }
-  
-  /* Tambahkan animasi loading untuk ikon upload */
-  @keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.1); }
-    100% { transform: scale(1); }
-  }
-  
-  .fe-upload, .fe-loader {
-    animation: pulse 1.5s infinite;
-  }
-`;
-
-document.head.appendChild(style);
-  
-  // Validasi form info dasar (cek apakah ada perubahan)
+  // =====================================================
+  // BASIC INFO FORM VALIDATION
+  // =====================================================
   const basicInfoForm = document.getElementById('basic-info-form');
   const saveChangesBtn = document.getElementById('saveChangesBtn');
   let originalUsername = '';
@@ -302,7 +288,9 @@ document.head.appendChild(style);
     });
   }
 
-  // Validasi form password
+  // =====================================================
+  // PASSWORD FORM VALIDATION
+  // =====================================================
   const passwordForm = document.getElementById('password-form');
   const passwordInput = document.getElementById('password');
   const rePasswordInput = document.getElementById('re_password');
@@ -414,7 +402,9 @@ document.head.appendChild(style);
     });
   }
 
-  // Menangani loading image jika ada masalah cache
+  // =====================================================
+  // USER IMAGE REFRESH
+  // =====================================================
   function refreshUserImage() {
     const userImage = document.querySelector('.user-avatar img');
     if (userImage) {
@@ -431,12 +421,10 @@ document.head.appendChild(style);
 
   // Memastikan gambar profile di-refresh saat halaman dimuat
   window.addEventListener('load', refreshUserImage);
-});
-</script>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  // Filter aktivitas berdasarkan tipe
+  // =====================================================
+  // ACTIVITY TIMELINE FILTER
+  // =====================================================
   const activityFilter = document.getElementById('activityFilter');
   const timelineItems = document.querySelectorAll('.timeline-item');
   
@@ -456,7 +444,9 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
   
-  // Load More functionality
+  // =====================================================
+  // LOAD MORE ACTIVITY
+  // =====================================================
   const loadMoreBtn = document.getElementById('loadMoreActivity');
   if (loadMoreBtn) {
     let page = 1;
@@ -465,9 +455,11 @@ document.addEventListener('DOMContentLoaded', function() {
       this.innerHTML = '<i class="fe fe-loader"></i> Loading...';
       this.disabled = true;
       
+      // Get user_id from button data attribute or session
+      const userId = this.getAttribute('data-user-id');
+      
       // Ajax request to get more logs
-      fetch(`get_more_logs.php?page=${++page}&user_id=${window.currentUserId}`)
-
+      fetch(`get_more_logs.php?page=${++page}&user_id=${userId}`)
         .then(response => response.json())
         .then(data => {
           if (data.logs && data.logs.length > 0) {
@@ -504,6 +496,10 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
   }
+  
+  // =====================================================
+  // HELPER FUNCTIONS
+  // =====================================================
   
   // Fungsi untuk membuat elemen timeline item
   function createTimelineItem(log) {
@@ -572,4 +568,5 @@ document.addEventListener('DOMContentLoaded', function() {
       hour12: true
     });
   }
+  
 });
