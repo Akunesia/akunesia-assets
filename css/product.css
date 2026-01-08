@@ -1,0 +1,285 @@
+/* Gaya umum */
+    .card {
+        transition: transform 0.3s, box-shadow 0.3s;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+    }
+    
+    /* Gaya untuk badge & tombol */
+    .badge {
+        font-size: 0.75rem;
+        font-weight: normal;
+    }
+    .btn-sm {
+        font-size: 0.8rem;
+        padding: 0.25rem 0.5rem;
+    }
+    
+    /* Gaya untuk card produk */
+    .product-img {
+        height: 180px;
+        overflow: hidden;
+    }
+    .card-title {
+        font-size: 0.95rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        line-height: 1.3;
+    }
+    
+    /* Animasi fade in untuk produk */
+    .product-item {
+        animation: fadeIn 0.6s;
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    /* Perbaikan tampilan mobile */
+    @media (max-width: 767.98px) {
+        .col-6 {
+            padding-left: 8px;
+            padding-right: 8px;
+        }
+        .card-body {
+            padding: 0.5rem;
+        }
+        .card-title {
+            font-size: 0.85rem;
+        }
+        .fs-5 {
+            font-size: 0.9rem !important;
+        }
+        .badge {
+            font-size: 0.7rem;
+        }
+        .card-footer {
+            padding: 0.5rem !important;
+        }
+        .btn-sm {
+            font-size: 0.75rem;
+            padding: 0.2rem 0.4rem;
+        }
+    }
+    
+    /* Modal styles */
+    #modalProductImage img {
+        max-height: 300px;
+        object-fit: cover;
+    }
+    
+    /* Bottom Sheet Modal Styles */
+    .bottomsheet.modal {
+        padding: 0 !important;
+    }
+    
+    .modal-dialog-bottomsheet {
+        margin: 0;
+        position: fixed;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        max-width: 100%;
+        transform: translate(0, 100%);
+        transition: transform 0.3s ease-out;
+    }
+    
+    .modal.show .modal-dialog-bottomsheet {
+        transform: translate(0, 0);
+    }
+    
+    .bottomsheet .modal-content {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+        border-top-left-radius: 16px;
+        border-top-right-radius: 16px;
+        box-shadow: 0 -5px 15px rgba(0,0,0,0.1);
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+    
+    .bottomsheet .modal-header {
+        position: sticky;
+        top: 0;
+        background-color: white;
+        z-index: 1;
+        border-bottom: 1px solid rgba(0,0,0,0.05);
+        padding: 15px 20px;
+    }
+    
+    .bottomsheet .modal-header::before {
+        content: '';
+        position: absolute;
+        top: 8px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 40px;
+        height: 4px;
+        background-color: #e0e0e0;
+        border-radius: 4px;
+    }
+    
+    .bottomsheet .modal-header .btn-close {
+        padding: 0.75rem;
+        margin: -0.75rem -0.75rem -0.75rem auto;
+    }
+    
+    .bottomsheet .modal-body {
+        padding: 20px;
+    }
+    
+    .bottomsheet .modal-footer {
+        position: sticky;
+        bottom: 0;
+        background-color: white;
+        z-index: 1;
+        border-top: 1px solid rgba(0,0,0,0.05);
+        padding: 15px 20px;
+    }
+    
+    .bottomsheet #modalProductImage img {
+        max-height: 300px;
+        width: 100%;
+        object-fit: contain;
+        border-radius: 8px;
+    }
+    
+    .bottomsheet #modalProductName {
+        font-size: 1.4rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+    
+    .bottomsheet #modalProductPrice {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--primary-color, #6366f1);
+    }
+    
+    .bottomsheet #buyProductBtn {
+        border-radius: 8px;
+        padding: 12px;
+        font-weight: 600;
+        font-size: 1rem;
+        background-color: var(--primary-color, #6366f1);
+        border: none;
+        box-shadow: 0 4px 6px rgba(99, 102, 241, 0.2);
+        transition: all 0.3s ease;
+    }
+    
+    .bottomsheet #buyProductBtn:hover {
+        background-color: var(--primary-hover, #4f46e5);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 8px rgba(99, 102, 241, 0.3);
+    }
+    
+    /* Backdrop overlay styling for bottomsheet */
+    .modal-backdrop.show {
+        opacity: 0.5;
+    }
+    
+    .card.h-100.shadow-sm {
+        padding: 0px;
+}
+    
+    /* Mobile Adjustments */
+    @media (min-width: 576px) {
+        .modal-dialog-bottomsheet {
+            max-width: 500px;
+            margin: 1.75rem auto;
+            position: relative;
+            transform: translate(0, 100%);
+            transition: transform 0.3s ease-out;
+        }
+        
+        .modal.show .modal-dialog-bottomsheet {
+            transform: translate(0, 0);
+        }
+        
+        .bottomsheet .modal-content {
+            border-radius: 16px;
+            max-height: calc(100vh - 3.5rem);
+        }
+    }
+    
+    @media (min-width: 768px) {
+        .modal-dialog-bottomsheet {
+            max-width: 700px;
+        }
+    }
+    
+    /* Animasi saat modal muncul dan menghilang */
+    .modal.fade .modal-dialog-bottomsheet {
+        transform: translate(0, 100%);
+        transition: transform 0.3s ease-out;
+    }
+    
+    .modal.fade.show .modal-dialog-bottomsheet {
+        transform: translate(0, 0);
+    }
+    
+    /* Styling untuk swipe gesture */
+    .modal-swipe-area {
+        width: 100%; 
+        height: 30px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        cursor: grab;
+    }
+    
+    /* Styling untuk highlight pencarian */
+    .search-highlight {
+        background-color: rgba(99, 102, 241, 0.1);
+        border-radius: 4px;
+        padding: 2px 0;
+    }
+    
+    /* Tombol reset pencarian */
+    .search-reset {
+        position: absolute;
+        right: 50px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        color: #6b7280;
+        cursor: pointer;
+        display: none;
+        z-index: 5;
+    }
+    
+    .search-reset:hover {
+        color: #4b5563;
+    }
+    
+    .search-wrapper {
+        position: relative;
+    }
+    
+    /* Pagination improvements */
+    .pagination .page-link {
+        border-radius: 0.5rem;
+        margin: 0 2px;
+        border: none;
+        color: #4b5563;
+        transition: all 0.2s ease;
+    }
+    
+    .pagination .page-item.active .page-link {
+        background-color: var(--primary-color, #6366f1);
+        color: white;
+        box-shadow: 0 2px 5px rgba(99, 102, 241, 0.3);
+    }
+    
+    .pagination .page-item:not(.active) .page-link:hover {
+        background-color: rgba(99, 102, 241, 0.1);
+        color: var(--primary-color, #6366f1);
+        transform: translateY(-2px);
+    }
