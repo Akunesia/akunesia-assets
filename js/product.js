@@ -4,44 +4,38 @@ document.addEventListener('DOMContentLoaded', function () {
     const searchForm = document.getElementById('searchForm');
     
     if (searchInput && searchInput.value.trim() !== '') {
-        // Tambahkan tombol reset pencarian jika ada nilai pencarian
         const searchWrapper = searchInput.closest('.input-group');
-        const resetButton = document.createElement('button');
-        resetButton.type = 'button';
-        resetButton.className = 'search-reset';
-        resetButton.innerHTML = '<i class="fe fe-x"></i>';
-        resetButton.style.display = 'block';
-        searchWrapper.style.position = 'relative';
-        searchWrapper.appendChild(resetButton);
-        
-        // Reset pencarian ketika tombol reset diklik
-        resetButton.addEventListener('click', function() {
-            // Hapus parameter search dari URL dan refresh halaman
-            const currentUrl = new URL(window.location.href);
-            currentUrl.searchParams.delete('search');
-            window.location.href = currentUrl.toString();
-        });
+        // Tambahkan pengecekan apakah wrapper ada
+        if (searchWrapper) {
+            const resetButton = document.createElement('button');
+            resetButton.type = 'button';
+            resetButton.className = 'search-reset';
+            resetButton.innerHTML = '<i class="fe fe-x"></i>';
+            resetButton.style.display = 'block';
+            searchWrapper.style.position = 'relative';
+            searchWrapper.appendChild(resetButton);
+            
+            resetButton.addEventListener('click', function() {
+                const currentUrl = new URL(window.location.href);
+                currentUrl.searchParams.delete('search');
+                window.location.href = currentUrl.toString();
+            });
+        }
     }
 
     // ==== FILTER KATEGORI ====
     window.filterByKategori = function (kategori) {
-        // Pertahankan parameter pencarian jika ada
-        const searchValue = searchInput ? searchInput.value.trim() : '';
+        // Cari elemen saat fungsi dijalankan agar lebih akurat
+        const currentSearchInput = document.getElementById('searchInput');
+        const searchValue = currentSearchInput ? currentSearchInput.value.trim() : '';
         let url = 'produk.php';
         
-        // Tambahkan kategori jika dipilih
-        if (kategori) {
-            url += '?kategori=' + encodeURIComponent(kategori);
-            // Tambahkan search jika ada
-            if (searchValue) {
-                url += '&search=' + encodeURIComponent(searchValue);
-            }
-        } else if (searchValue) {
-            // Jika hanya ada pencarian tanpa kategori
-            url += '?search=' + encodeURIComponent(searchValue);
-        }
+        let params = new URLSearchParams();
+        if (kategori) params.append('kategori', kategori);
+        if (searchValue) params.append('search', searchValue);
         
-        window.location.href = url;
+        const queryString = params.toString();
+        window.location.href = queryString ? url + '?' + queryString : url;
     };
 
     // ==== SWITCH VIEW ====
@@ -50,7 +44,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const productGrid = document.getElementById('productGrid');
     const productList = document.getElementById('productList');
 
-    if (viewGrid && viewList) {
+    // Gunakan pengecekan semua elemen sebelum menjalankan fungsi switch
+    if (viewGrid && viewList && productGrid && productList) {
         viewGrid.addEventListener('click', function (e) {
             e.preventDefault();
             productGrid.classList.remove('d-none');
@@ -77,5 +72,4 @@ document.addEventListener('DOMContentLoaded', function () {
             viewList.classList.add('active');
         }
     }
-
 });
