@@ -308,7 +308,8 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         });
     }
-  function removeCartItem(cartId, button, originalHTML) {
+
+    function removeCartItem(cartId, button, originalHTML) {
         // Ubah URL tanpa .php
         const xhr = new XMLHttpRequest();
         xhr.open('POST', 'remove_from_cart', true);
