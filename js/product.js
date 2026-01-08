@@ -309,48 +309,50 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
   function removeCartItem(cartId, button, originalHTML) {
-    const xhr = new XMLHttpRequest();
-    xhr.open('POST', 'remove_from_cart', true);
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-
-    xhr.onload = function () {
-        try {
-            const data = JSON.parse(this.responseText);
-            if (data.success) {
-                const badge = document.getElementById('cartCounter');
-                if (badge) {
-                    badge.textContent = data.cartCount;
-                    badge.style.display = data.cartCount > 0 ? 'block' : 'none';
-                }
-                if (typeof updateCartDropdown === 'function') {
+        // Ubah URL tanpa .php
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', 'remove_from_cart', true);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        
+        xhr.onload = function() {
+            try {
+                const data = JSON.parse(this.responseText);
+                if (data.success) {
+                    const badge = document.getElementById('cartCounter');
+                    if (badge) {
+                        badge.textContent = data.cartCount;
+                        badge.style.display = data.cartCount > 0 ? 'block' : 'none';
+                    }
                     updateCartDropdown();
+                } else {
+                    alert('Gagal menghapus item dari keranjang.');
+                    if (button) {
+                        button.innerHTML = originalHTML;
+                        button.disabled = false;
+                    }
                 }
-            } else {
-                alert('Gagal menghapus item dari keranjang.');
+            } catch (e) {
+                console.error("Error parsing response:", e);
+                if (button) {
+                    button.innerHTML = originalHTML;
+                    button.disabled = false;
+                }
             }
-        } catch (e) {
-            console.error("Error parsing response:", e);
-        }
+        };
+        
+        xhr.onerror = function() {
+            console.error("Network error during remove from cart");
+            alert('Terjadi kesalahan saat menghapus.');
+            if (button) {
+                button.innerHTML = originalHTML;
+                button.disabled = false;
+            }
+        };
+        
+        xhr.send('cart_id=' + encodeURIComponent(cartId));
+    }
 
-        if (button) {
-            button.innerHTML = originalHTML;
-            button.disabled = false;
-        }
-    };
-
-    xhr.onerror = function () {
-        alert('Terjadi kesalahan saat menghapus.');
-        if (button) {
-            button.innerHTML = originalHTML;
-            button.disabled = false;
-        }
-    };
-
-    xhr.send('cart_id=' + encodeURIComponent(cartId));
-}
-
-// === INIT WAJIB ===
-document.addEventListener('DOMContentLoaded', function () {
-    if (typeof attachQtyButtons === 'function') attachQtyButtons();
-    if (typeof attachRemoveCartEvents === 'function') attachRemoveCartEvents();
+    // Inisialisasi
+    attachQtyButtons();
+    attachRemoveCartEvents();
 });
